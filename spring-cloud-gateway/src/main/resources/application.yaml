@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: gateway-example
+  cloud:
+    #使用Nacos作为服务注册发现
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    #使用Sentinel作为熔断器
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+    #路由网关配置
+    gateway:
+    #设置与服务注册发现组件结合,这样可以采用服务名的路由策略
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        # 采用自定义路由ID(有固定用法,不同的id有不同的功能.
+       #详见:https://cloud.spring.io/spring-cloud-gateway/2.0.x/single/spring-cloud-gateway.html#gateway-route-filters)
+       -  id: NACOS-PROVIDER
+          # 采用 LoadBalanceClient 方式请求,以 lb:// 开头,
+          #后面的是注册在 Nacos 上的服务名
+          uri: lb://nacos-provider
+          predicates:
+          - Method=GET,POST
+server:
+  port: 9000
+
+
+#目前无效
+feign:
+  sentinel:
+    enabled: true
+
+
+# 目前无效
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# 配置日志级别，方别调试
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+
+
+

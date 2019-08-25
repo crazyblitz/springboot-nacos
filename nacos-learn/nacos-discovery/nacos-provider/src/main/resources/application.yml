@@ -1,0 +1,14 @@
+server:
+  port: ${random.int(8000,9000)}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 139.199.133.171:8848
